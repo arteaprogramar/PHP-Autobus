@@ -1,10 +1,12 @@
 <?php
 //session_start();
 //print_r($_SESSION["bus"]);
+//print_r("IS NULL XDA ".is_null($_SESSION["XDA"][12]));
+//print_r("ISSET ".!isset($_SESSION["bus"][1]));
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">

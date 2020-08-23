@@ -6,20 +6,43 @@
  * Time: 07:11 PM
  */
 
+require_once 'SessionModel.php';
+
 class BusModel {
+
+    private $SESSION_NAME = "bus";
+    protected $session = null;
+
 
     /**
      * BusModel constructor.
      */
     public function __construct() {
-        $this->initSession();
+        $this->session = SessionModel::getInstance();
     }
 
     /**
-     * Iniciador de Session
+     * Devuelve el valor del array
+     * @return int
      */
-    public function initSession() {
-        session_start();
+    public function countSeatsUsed() {
+        if ($this->session->__isset($this->SESSION_NAME)) {
+            return count($this->session->__get($this->SESSION_NAME));
+        } else {
+            return 0;
+        }
+    }
+
+    /**
+     * Regresa la SESSION
+     * @return mixed|null
+     */
+    public function getSeats() {
+        if ($this->session->__isset($this->SESSION_NAME)) {
+            return $this->session ->__get($this->SESSION_NAME);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -27,12 +50,13 @@ class BusModel {
      * @param $obj_seat
      * @return array
      */
-    public function assignSeat($obj_seat) {
-        $object = json_decode($obj_seat);
-        if ($this->availableSeat($object->numero) === 0) {
-            $_SESSION["bus"][$object->numero] = $obj_seat;
+    public function assignSeat($object) {
+        $json = json_decode($object);
+
+        if ($this->availableSeat($json->numero) === 0) {
+            $this->session->set($this->SESSION_NAME, $json->numero, $object);
             return array("msj" => "Registro Exitoso");
-        } else if ($this->availableSeat($object->numero) === 1) {
+        } else if ($this->availableSeat($json->numero) === 1) {
             return array("msj" => "No disponible");
         }
     }
@@ -44,33 +68,19 @@ class BusModel {
      */
     public function availableSeat($numero) {
         $isAvailable = 0;
-        if (count($_SESSION["bus"]) >= 1) {
-            for ($i = 1; $i < count($_SESSION["bus"]); $i++) {
-                $object = json_decode($_SESSION["bus"][$i]);
-                if ($numero === $object->numero) {
-                    $isAvailable = 1;
+        $result = $this->countSeatsUsed();
+
+        if ($result>= 1){
+            for ($i = 1; $i < $result; $i++){
+                if (!is_null($this->session->__get($this->SESSION_NAME))){
+                    $json = json_decode($this->session->__get($this->SESSION_NAME)[$i]);
+                    if ($numero === $json->numero){
+                        $isAvailable = 1;
+                    }
                 }
             }
-        } else {
-
         }
         return $isAvailable;
-    }
-
-    /**
-     * Regresa la session
-     * @return mixed
-     */
-    public function getSeats() {
-        return ($_SESSION["bus"]);
-    }
-
-    /**
-     * Devuelve el valor del array
-     * @return int
-     */
-    public function countSeatsUsed() {
-        return count($_SESSION["bus"]);
     }
 
     /**
@@ -79,7 +89,7 @@ class BusModel {
      * @return mixed
      */
     public function getSeat($number) {
-        return ($_SESSION["bus"][$number]);
+        return $this->session->__get($this->SESSION_NAME)[$number];
     }
 
     /**
@@ -87,7 +97,8 @@ class BusModel {
      * @param $number
      */
     public function removeSeat($number) {
-        unset($_SESSION["bus"][$number]);
+        //unset($_SESSION["bus"][$number]);
+        $this->session->remove($this->SESSION_NAME, $number);
     }
 
     /**
@@ -97,7 +108,7 @@ class BusModel {
      * @return mixed
      */
     public function updateSeat($number, $obj_seat) {
-        $_SESSION["bus"][$number] = $obj_seat;
+        $this->session->set($this->SESSION_NAME, $number, $obj_seat);
         return array("msj" => "Actualización Exitosa");
     }
 

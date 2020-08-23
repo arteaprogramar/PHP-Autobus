@@ -18,7 +18,7 @@ $html = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // The request is using the POST method
-    $html .= "<table class='centered'> <thead></thead> <thbody> <tr> <td class='black'><img src='public/assets/asiento_ocupado.png'></td>  <td colspan='4'></td>  </tr>";
+    $html .= "<table class='centered'> <thead></thead> <thbody> <tr> <td class='black'><img src='public/assets/aso.png'></td>  <td colspan='4'></td>  </tr>";
 
     for ($i = 0; $i < 10; $i++) {
         $html .= '<tr>';
@@ -26,25 +26,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         for ($j = 0; $j < 4; $j++) {
             $num_lugar = $num_lugar + 1;
 
-            if ($array[$num_lugar] != '') {
-                $object = json_decode($array[$num_lugar]);
-                if ($object->numero == $num_lugar) {
-                    $html .= "<td class='black white-text'>
-                                <a class='modal-trigger' href='#_info' onclick='infoAsiento($num_lugar)'>$num_lugar</a><br>
-                                <img src='public/assets/asiento_ocupado.png'>
-                                </td>";
-                }
+            if (is_null($array[$num_lugar])) {
+                $html .= "<td class='teal green darken-4 white-text'>$num_lugar<br><img src='public/assets/asv.png'></td>";
             } else {
-                $html .= "<td class='teal green darken-4 white-text'>$num_lugar<br>
-                            <img src='public/assets/asiento_vacio.png'>
-                        </td>";;
+                $json = json_decode($array[$num_lugar]);
+
+                if ($json->numero == $num_lugar) {
+                    $html .= "<td class='black white-text'><a class='modal-trigger' href='#_info' onclick='infoAsiento($num_lugar)'>$num_lugar</a><br><img src='public/assets/aso.png'></td>";
+                }
             }
 
             if ($j == 1) {
                 $html .= "<td> </td>";
             }
         }
-
         $html .= "</tr>";
     }
 
@@ -52,7 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $html .= "</thbody></table>";
 
     echo $html;
-
     exit();
 }
 
