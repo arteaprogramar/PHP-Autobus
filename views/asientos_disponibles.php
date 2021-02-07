@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
              <option value='' disabled selected>Seleccione Asiento</option>";
 
     for ($i = 1; $i <= 40; $i++) {
-        if (is_null($array[$i])){
+        if (is_null(@$array[$i])){
             $html .= "<option value='$i'>$i</option>";
         } else {
             $json = json_decode($array[$i]);

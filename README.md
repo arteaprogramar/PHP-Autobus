@@ -1,4 +1,4 @@
-### Simulador de Autobús de Pasajero v2.1.1
+### Simulador de Autobús de Pasajero v2.1.2
 #### [PHP-AJAX-MATERIALIZE-MVC]
 
 El objetivo de este proyecto es realizar la simulación de un autobús de pasajeros con **PHP** utilizando los siguientes recursos:
